@@ -1,0 +1,18 @@
+# This configuration is intended for development purpose, it's **your** responsibility to harden it for production
+version: '3.8'
+
+services:
+  database-mongoDB:
+    container_name: mongoDB
+    image: mongo
+    # 접근 포트 설정(컨테이너 외부:컨테이너 내부)
+    ports:
+      - 127.0.0.1:27017:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=root!@#
+      - MONGO_INITDB_DATABASE=test
+
+
+    #TOOD 볼륨옵션 사용
+
