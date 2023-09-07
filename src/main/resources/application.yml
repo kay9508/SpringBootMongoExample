@@ -1,9 +1,36 @@
-spring:
-  data:
-    mongodb:
-      host: 127.0.0.1
-      port: 27017
-      authentication-database: admin
-      username: root
-      password: root!@#
-      database: test
+### When using a single MongoDB, you can use it as follows.
+#spring :
+#  data :
+#    mongodb :
+#      host : 127.0.0.1
+#      port : 27017
+#      authentication-database : admin
+#      username : root
+#      password : root!@#
+#      database : test
+
+mongodb:
+  primary:
+    host: 127.0.0.1
+    port: 27017
+    authentication-database: admin
+    username: root
+    password: root!@#
+    database: test
+  secondary:
+    host: 127.0.0.1
+    port: 27017
+    authentication-database: admin
+    username: root
+    password: root!@#
+    database: test2
+
+### Settings for logging queries that are interpreted and actually executed by Spring Data MongoDB and Querydsl.
+logging:
+  level:
+    org:
+      springframework:
+        data:
+          mongodb:
+            core:
+              MongoTemplate: DEBUG
