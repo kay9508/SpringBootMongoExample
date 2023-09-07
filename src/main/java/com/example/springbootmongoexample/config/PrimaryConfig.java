@@ -73,7 +73,7 @@ public class PrimaryConfig {
                 .build());
     }
 
-    //TODO 최신 릴리스에서 제안한 대로 연결 문자열에서 MongoTemplate 을 만드는 대신 SimpleMongoClientDatabaseFactory 를 사용하고 있습니다.
+    //최신 릴리스에서 제안한 대로 연결 문자열에서 MongoTemplate 을 만드는 대신 SimpleMongoClientDatabaseFactory 를 사용하고 있습니다.
     @Primary
     @Bean(name = "primaryMongoDBFactory")
     public MongoDatabaseFactory mongoDatabaseFactory(
@@ -83,7 +83,7 @@ public class PrimaryConfig {
     }
 
     @Primary
-    @Bean(name = "primaryMongoTemplate")
+    @Bean(name = "primaryMongoTemplate") //Multi Database환경에서 템플릿 적용
     public MongoTemplate mongoTemplate(@Qualifier("primaryMongoDBFactory") MongoDatabaseFactory primaryMongoDBFactory) {
         /*DbRefResolver resolver = new DefaultDbRefResolver(primaryMongoDBFactory);
         MappingMongoConverter converter = new MappingMongoConverter(resolver, new MongoMappingContext());
@@ -91,6 +91,7 @@ public class PrimaryConfig {
         return new MongoTemplate(primaryMongoDBFactory, converter);*/
         return new MongoTemplate(primaryMongoDBFactory);
     }
+
     /*@Bean(name = "primaryConvertingSet")
     public MappingMongoConverter primaryConvertingSet(
             @Qualifier("primaryMongoDBFactory") MongoDatabaseFactory primaryMongoDBFactory,
