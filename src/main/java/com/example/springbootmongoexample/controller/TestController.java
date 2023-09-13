@@ -152,6 +152,11 @@ public class TestController {
         List<ConferenceDoc> loadByUuidOfMember3 = conferenceDocRepository.findByMemberContains(t2);
 
 
+        // MongoTemplate를 사용한 Object검색
+        Query query2 = new Query().addCriteria(Criteria.where("member").in(t2));
+        List<ConferenceDoc> loadByUuidOfMember4 = secondaryMongoTemplate.find(query2, ConferenceDoc.class);
+
+
         return ResponseEntity.ok().body(load);
     }
 }
