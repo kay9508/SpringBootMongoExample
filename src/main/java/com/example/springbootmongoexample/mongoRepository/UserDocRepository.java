@@ -9,5 +9,6 @@ import org.springframework.stereotype.Repository;
 //QuerydslPredicateExecutor<Document>은 queryDsl사용시에만 추가
 //public interface UserDocRepository extends MongoRepository<UserDoc, String>, QuerydslPredicateExecutor<UserDoc> {
 public interface UserDocRepository extends MongoRepository<UserDoc, String> {
-    BookDoc findByName(String name);
+    UserDoc findByName(String name);
+    UserDoc findByPhoneNumberAndName(String phoneNum, String name);
 }

@@ -69,18 +69,11 @@ proferties파일(또는 yml)에 각 접속에 대한 정보를 명시하고
 config파일에 적어둔 주석을 봐도 알수있겠지만
 @EnableMongoRepositories 어노테이션의 basePackageClasses 옵션은 말그대로 해당 Config로 정해둔 DB를 사용할 Repository의 <b style="color:red;">'패키지'</b>를 명시해주는 거기 때문에 connection하려는 DB의 수 만큼 패키지를 만들어 주어야하고 해당되는 repository를 넣어주어야한다.
 
-
-TODO : QueryDsl을 사용하는 방법 확인 예정 2023/09/07
+MongoDB + QueryDsl을 사용하는 방법은 이것저것 시도해 보았으나 아직 적용하지 못했다 https://gofnrk.tistory.com/119
 
 TODO : 지저분한 코드 제거 및 테스트코드를 사용한 restApi 적용 예정 2023/09/07
 
 TODO : Docker compose의 volume옵션을 사용한 개발환경 테스트 DB구성 적용 예정 2023/09/07
-
-
-
-### - queryDsl Q모델 삭제,생성
-삭제 : Gradle → Tasks → build → clean\
-생성 : Gradle → Tasks → other → complieQuerydsl
 
 Multiple Database 관련 내용은 https://recordsoflife.tistory.com/1224 를 참고\
 Spring에서 mongoDB연동은 https://velog.io/@tekies09/SpringBoot-%EC%97%90%EC%84%9C-mongoDB-%EC%97%B0%EB%8F%99%ED%95%98%EA%B8%B0 와\

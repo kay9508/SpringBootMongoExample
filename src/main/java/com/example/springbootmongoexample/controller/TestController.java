@@ -5,6 +5,7 @@ import com.example.springbootmongoexample.mongoRepository.BoardDocRepository;
 import com.example.springbootmongoexample.mongoRepository2.BookDocRepository;
 import com.example.springbootmongoexample.mongoRepository2.CallLogDocRepository;
 import com.example.springbootmongoexample.mongoRepository.UserDocRepository;
+import com.example.springbootmongoexample.mongoRepository2.ConferenceDocRepository;
 import com.example.springbootmongoexample.service.EventService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,9 @@ public class TestController {
 
     @Autowired
     private BookDocRepository bookDocRepository;
+
+    @Autowired
+    private ConferenceDocRepository conferenceDocRepository;
 
     @PostMapping(path = "/eventDoc")
     public ResponseEntity<String> insertEventDoc(EventDoc eventDoc) {
@@ -134,6 +138,27 @@ public class TestController {
 //        Query query = new Query().addCriteria(Criteria.where("_id").is("어린왕자"));
 //        List<BookDoc> findBooks3 = primaryMongoTemplate.find(query, BookDoc.class);
 //        secondaryMongoTemplate.find()
+
+        return ResponseEntity.ok().body(load);
+    }
+
+    @GetMapping("/conference/{_id}")
+    public ResponseEntity<ConferenceDoc> loadConference(ConferenceDoc conferenceDoc) {
+
+        ConferenceDoc load = conferenceDocRepository.findById(conferenceDoc.get_id()).get();
+
+        Query query = new Query().addCriteria(Criteria.where("_id").is(conferenceDoc.get_id()));
+        List<ConferenceDoc> findTest = secondaryMongoTemplate.find(query, ConferenceDoc.class);
+
+        List<ConferenceDoc> loadByMembers = conferenceDocRepository.findAll();
+        List<ConferenceDoc> loadByUuidOfMember = conferenceDocRepository.findByMemberContains("0c90e89a-f8d7-4fdf-b64d-874f5ee71bad");
+
+        ConferenceDoc.Member t = new ConferenceDoc.Member("0c90e89a-f8d7-4fdf-b64d-874f5ee71bad");
+        List<ConferenceDoc> loadByUuidOfMember2 = conferenceDocRepository.findByMemberContains(t);
+
+        ConferenceDoc.Member t2 = new ConferenceDoc.Member("f56ae79e-eeb7-4c83-a93a-bdbd41013e83");
+        List<ConferenceDoc> loadByUuidOfMember3 = conferenceDocRepository.findByMemberContains(t2);
+
 
         return ResponseEntity.ok().body(load);
     }

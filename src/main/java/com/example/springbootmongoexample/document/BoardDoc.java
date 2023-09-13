@@ -1,7 +1,9 @@
 package com.example.springbootmongoexample.document;
 
-//import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -14,6 +16,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 //@Entity// @Entity를 명시해야 Querydsl의 Q 엔티티 클래스가 생성됨 (spring-data-jpa의 어노테이션)
+//@QueryEntity
 public class BoardDoc {
 
     @Id
