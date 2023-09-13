@@ -65,29 +65,25 @@ public class TestController {
     public ResponseEntity<String> insertBookDoc(BookDoc bookDoc) {
         primaryMongoTemplate.insert(bookDoc);
 
-        //몽고 템플릿을 사용한 검색 TODO 근데 셋다 결과가 안나오는데?
-        Query query = new Query().addCriteria(Criteria.where("title").is(".*어린*."));
+        return ResponseEntity.ok("ok");
+    }
+
+    @GetMapping("/bookDoc")
+    public ResponseEntity<List<BookDoc>> loadBookDoc(BookDoc bookDoc) {
+
+        // MongoTemplate을 사용한 like검색
+        Query query = new Query().addCriteria(Criteria.where("title").regex(".*" + bookDoc.getTitle() +".*","i"));
         List<BookDoc> findBooks = primaryMongoTemplate.find(query, BookDoc.class);
 
-        Query query2 = new Query().addCriteria(Criteria.where("title").is("어린"));
-        List<BookDoc> findBooks2 = primaryMongoTemplate.find(query, BookDoc.class);
-
-        Query query3 = new Query().addCriteria(Criteria.where("title").is("어린왕자"));
-        List<BookDoc> findBooks3 = primaryMongoTemplate.find(query, BookDoc.class);
-
-        Query query4 = new Query().addCriteria(Criteria.where("title").is("^어린"));
-        List<BookDoc> findBooks4 = primaryMongoTemplate.find(query, BookDoc.class);
-
-        // 전체 조회
+        // MongoTemplate을 사용한 전체 조회
         List<BookDoc> all = primaryMongoTemplate.findAll(BookDoc.class);
 
-        bookDocRepository.save(new BookDoc("아이디", "제목2132", "내용입니다."));
+        // Repository를 사용한 검색
         BookDoc load1 = bookDocRepository.findByTitle("제");
         BookDoc load2 = bookDocRepository.findByTitle("제목2132");
         List<BookDoc> load3 = bookDocRepository.findByTitleIsLike("제");
 
-
-        return ResponseEntity.ok("ok");
+        return ResponseEntity.ok().body(findBooks);
     }
 
     @PostMapping(path = "/boardDoc")
@@ -121,12 +117,12 @@ public class TestController {
         return ResponseEntity.ok().body(find);
     }
 
-    @GetMapping("/callLog/{_id}") //이거 받아지지가 않네? String 으로받아서 변환해야하나...
+    @GetMapping("/callLog/{_id}")
     public ResponseEntity<CallLogDoc> searchCallLogDoc(CallLogDoc callLogDoc) {
 
         ObjectId test = new ObjectId("64f96a6235129d6b0b1c9639");
         callLogDoc.set_id(test);
-        //이거 왜 load를 못하지?
+
         Optional<CallLogDoc> loadOptional = callLogDocRepository.findById(callLogDoc.get_id());
         CallLogDoc load = null;
         if (loadOptional.isPresent()) {
@@ -134,10 +130,6 @@ public class TestController {
         }
 
         List<CallLogDoc> all = callLogDocRepository.findAll();
-
-//        Query query = new Query().addCriteria(Criteria.where("_id").is("어린왕자"));
-//        List<BookDoc> findBooks3 = primaryMongoTemplate.find(query, BookDoc.class);
-//        secondaryMongoTemplate.find()
 
         return ResponseEntity.ok().body(load);
     }
