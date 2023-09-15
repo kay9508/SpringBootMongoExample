@@ -13,6 +13,13 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=root!@#
       - MONGO_INITDB_DATABASE=test
 
+  database-redis:
+    container_name: redis
+    image: redis:alpine
+    # 접근 포트 설정(컨테이너 외부:컨테이너 내부)
+    ports:
+      - 127.0.0.1:6379:6379
+
 
     #TOOD 볼륨옵션 사용
 #    volumes:

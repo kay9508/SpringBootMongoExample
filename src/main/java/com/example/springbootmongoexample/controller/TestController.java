@@ -6,13 +6,19 @@ import com.example.springbootmongoexample.mongoRepository2.BookDocRepository;
 import com.example.springbootmongoexample.mongoRepository2.CallLogDocRepository;
 import com.example.springbootmongoexample.mongoRepository.UserDocRepository;
 import com.example.springbootmongoexample.mongoRepository2.ConferenceDocRepository;
+import com.example.springbootmongoexample.redisRepository.TestRedisRepository;
 import com.example.springbootmongoexample.service.EventService;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.core.Cursor;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +28,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@Slf4j
 public class TestController {
 
     // Document 별로 service를 미리 정해두고 내부의 메서드를 통해 사용할 수 있음
@@ -50,6 +57,13 @@ public class TestController {
 
     @Autowired
     private ConferenceDocRepository conferenceDocRepository;
+
+    @Autowired
+    private TestRedisRepository testRedisRepository;
+
+    @Autowired
+    @Qualifier("redisTemplate")
+    private RedisTemplate redisTemplate;
 
     @PostMapping(path = "/eventDoc")
     public ResponseEntity<String> insertEventDoc(EventDoc eventDoc) {
@@ -155,6 +169,118 @@ public class TestController {
         // MongoTemplate를 사용한 Object검색
         Query query2 = new Query().addCriteria(Criteria.where("member").in(t2));
         List<ConferenceDoc> loadByUuidOfMember4 = secondaryMongoTemplate.find(query2, ConferenceDoc.class);
+
+        /*TestRedis saveTest = new TestRedis(
+                "IP460S_a8e539b7dbac",
+                "705883c5-9ced-4569-ac97-d850911d91b7",
+                "idle",
+                "2023-09-13T04:07:41.341Z",
+                "2023-09-13T07:29:13.479Z",
+                List.of("disable","always"),
+                "disable",
+                "01096415737",
+                "0",
+                "disable",
+                "disable",
+                "disable",
+                "",
+                "disable",
+                "disable",
+                "IPC_I_MS_460S_2.3.108",
+                "enable",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "58.181.23.160",
+                "07045131599",
+                "KCT",
+                "2",
+                "ok",
+                "ok",
+                "80",
+                "disable",
+                "01096415737",
+                "**",
+                "",
+                ""
+        );*/
+
+        //redisTemplate.opsForValue().set("705883c5-9ced-4569-ac97-d850911d91b7", "rd");
+        Object load2 = redisTemplate.opsForValue().get("IP460S_a8e539b81b7c");
+        Object load9 = redisTemplate.opsForValue().get(".IP460S");
+
+        // https://medium.com/@chlee7746/redis-scan-%EB%AA%85%EB%A0%B9%EC%96%B4-%ED%8D%BC%ED%8F%AC%EB%A8%BC%EC%8A%A4-e29e242b8038
+
+        Object load19 = redisTemplate.keys(".IP");
+        Object load119 = redisTemplate.keys("IP*");
+
+
+        Optional<TestRedis> loadTestRedis = testRedisRepository.findById("IP460S_a8e539b81b7c");
+        Optional<TestRedis> loadTestRedis2 = testRedisRepository.findById("IP460S_a8e539b81b7c");
+
+
+        /*ScanOptions scanOptions = ScanOptions.scanOptions().match("*").count(10).build();
+        Cursor<byte[]> keys = redisTemplate.getConnectionFactory().getConnection().scan(scanOptions);*/
+
+        RedisConnection redisConnection = redisTemplate.getConnectionFactory().getConnection();
+        ScanOptions options = ScanOptions.scanOptions().match("705883c5-9ced-4569-ac97-d850911d91b7-2295*").count(400).build();
+
+        Cursor<byte[]> c = redisConnection.scan(options);
+        while (c.hasNext()) {
+            log.info(new String(c.next()));
+        }
+
+
+        /*for (Integer i = 0; i < 100000; i++) {
+            redisTemplate.opsForValue().set("705883c5-9ced-4569-ac97-d850911d91b7-" + i.toString(), i.toString());
+        }*/
+
+        /*TestRedis testRedis = new TestRedis(
+                "IP460S_a8e539b81b7c1111",
+                "6ea7433f-8ff7-42d8-9a1b-91a113aa14cf",
+                null,
+                "2023-09-12T07:50:09.387Z",
+                "2023-09-13T06:09:08.811Z",
+                null,
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "58.181.23.160",
+                "07045131555",
+                "KCT",
+                "3",
+                "ok",
+                "ok",
+                "80",
+                "disable",
+                "01089435227",
+                "**",
+                "",
+                ""
+        );
+
+        testRedisRepository.save(testRedis);*/
 
 
         return ResponseEntity.ok().body(load);

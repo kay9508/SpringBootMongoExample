@@ -9,6 +9,12 @@
 #      password : root!@#
 #      database : test
 
+spring:
+  data:
+    redis:
+      host: localhost
+      port: 3679
+
 mongodb:
   primary:
     host: 127.0.0.1
